@@ -1,0 +1,11 @@
+"info": {
+        "gameCreation": 1630549925000,
+        "gameDuration": 1263836,
+        "gameId": 4029916264,
+        "gameMode": "CLASSIC",
+        "gameName": "teambuilder-match-4029916264",
+        "gameStartTimestamp": 1630549948101,
+        "gameType": "MATCHED_GAME",
+        "gameVersion": "11.17.394.4489",
+        "mapId": 11
+}
