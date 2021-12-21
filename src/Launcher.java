@@ -22,7 +22,6 @@ public class Launcher implements ActionListener {
     //  Creating tournament (maybe)
     //  Using data to track other stats (warding, cs average, winrate, champion performance...)
 
-    static final int dataOffset = 135;
     final Color victory = Color.cyan;
     final Color defeat = Color.red;
 
@@ -114,11 +113,20 @@ public class Launcher implements ActionListener {
                     soloQ = null;
                     flexQ = null;
 
+                    playerProfileGUI.getFrame().setVisible(true);
+
                     //get match history ids
 
                     String[] matchIDs = getMatchId(player.getPuuid(), 0, 20);
 
-                    playerProfileGUI.getFrame().setVisible(true);
+                    for (int i = 0; i < matchIDs.length; i++) {
+                        MatchHistoryData mhd = new MatchHistoryData(openConnection("https://americas.api.riotgames.com/lol/match/v5/" +
+                                "matches/" + matchIDs[i] + "?"));
+                        MatchSummary ms = new MatchSummary(mhd, player);
+                        System.out.println(ms.toString());
+                    }
+
+
 
                 } else {
                     startingGUI.getErrorLabel().setText("An Error Occured.");
@@ -153,102 +161,6 @@ public class Launcher implements ActionListener {
         return rawData.split(",");
     }
 
-    public Player MatchSummary(String matchId, Summoner summoner) throws Exception {
-        MatchHistoryData mhd = matchHistoryData(matchId, summoner);
-
-        int playerIndex = findPlayer(summoner, mhd.getMetadata());
-
-        boolean team = false;  //  True for red, false for blue.
-
-        if (playerIndex > 5) {
-            team = true;
-        }
-
-        Player player = new Player(mhd.getParticipants()[6 + nthPlayer(playerIndex)],
-                team , Boolean.parseBoolean(mhd.getParticipants()[134 + nthPlayer(playerIndex)]),
-                Integer.parseInt(mhd.getParticipants()[38 + nthPlayer(playerIndex)]),
-                Integer.parseInt(mhd.getParticipants()[13 + nthPlayer(playerIndex)]),
-                Integer.parseInt(mhd.getParticipants()[0 + nthPlayer(playerIndex)]),
-                Integer.parseInt(mhd.getParticipants()[118 + nthPlayer(playerIndex)]),
-                Integer.parseInt(mhd.getParticipants()[23 + nthPlayer(playerIndex)]), null);
-
-        return player;
-    }
-
-    public int findPlayer(Summoner summoner, String[] metadata) {
-        for (int i = 1; i < 10; i++) {
-            if (metadata[i + 2].equals(summoner.getPuuid())) {
-                return i;
-            }
-        }
-
-        return 0;
-    }  //  find and returns the index of the player to access him/her in the participants array
-       //  return 0 if not found (though this probably will never happen)
-
-    public MatchHistoryData matchHistoryData(String matchId, Summoner summoner) throws Exception {
-        URL url = new URL("https://americas.api.riotgames.com/lol/match/v5/matches/"
-                + matchId  + "?" + API_key);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-        String rawData = reader.readLine();
-        reader.close();
-
-        //  Split the data into 3 categories (metadata, info, participants), and put them into String arrays.
-        //  Refer to the README and the reference file on how to efficiently take data out from the array.
-
-        String metadata = rawData.substring(rawData.indexOf("\"metadata\""), rawData.indexOf("\"]}") + 3);
-        metadata = metadata.substring(11).replaceAll("[\\[\\]\"{}]", "");
-
-        String[] metadataArr = metadata.split(",");
-
-        String info = rawData.substring(rawData.indexOf("\"info\":"), nthIndexOf(rawData, ",\"participants",
-                2)) + "}";
-        info = info.substring(8).replaceAll("[\\[\\]\"{}]", "");
-
-        String[] infoArr = info.split(",");
-
-        String participants = rawData.substring(nthIndexOf(rawData, "\"participants", 2),
-                rawData.indexOf(",\"tournamentCode"));
-        participants = participants.substring(16).replaceAll("[\\[\\]\"{}]", "");
-
-        String[] participantsArr = participants.split(",");
-
-        for (int i = 0; i < participantsArr.length; i++) {
-            participantsArr[i] = participantsArr[i].substring(participantsArr[i].lastIndexOf(":") + 1);
-        }
-
-        for (int i = 0; i < infoArr.length; i++) {
-            infoArr[i] = infoArr[i].substring(infoArr[i].indexOf(":") + 1);
-        }
-
-        for (int i = 0; i < metadataArr.length; i++) {
-            metadataArr[i] = metadataArr[i].substring(metadataArr[i].indexOf(":") + 1);
-        }
-
-        return new MatchHistoryData(metadataArr, infoArr, participantsArr);
-    }
-
-    public static int nthIndexOf(String string, String searchElement, int nth) {
-        int result = 0;
-
-        try {
-            for (int i = 0; i < nth; i++) {
-                result += string.indexOf(searchElement);
-
-                if (i + 1 != nth) {
-                    string = string.substring(result + searchElement.length());
-                    result += searchElement.length();
-                }
-            }
-
-            return result;
-        } catch (IndexOutOfBoundsException e) {
-            return -1;
-        }
-    }
-
     public static void skipLine(Scanner scanner, int lines) {
 
         for (int i = 0; i < lines; i++) {
@@ -257,7 +169,5 @@ public class Launcher implements ActionListener {
 
     }  //this is to skip multiple lines
 
-    public static int nthPlayer(int nth) {
-        return (nth - 1) * dataOffset;
-    }  //used to jump to the nth player in the participants array
+
 }

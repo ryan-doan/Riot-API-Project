@@ -15,7 +15,7 @@ public class Match {
     boolean winner;  //  True for red, false for blue. For sake of clarity, use defined constants above
     String gameID;
     String queueType;
-    Player[] players;
+    MatchSummary[] players;
     long matchTime;  //  In milliseconds
     long matchDate;
 

@@ -5,7 +5,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
-public class StartingGUI {
+public class StartingGUI extends GUI {
     JFrame frame;
     JPanel panel;
     JLabel name;
@@ -59,7 +59,7 @@ public class StartingGUI {
         errorLabel.setFont(font.deriveFont(18f));
         panel.add(errorLabel);
 
-        authors = new JLabel("A program made by Ryan Doan and An Nguyen");
+        authors = new JLabel("A program made by Ryan Doan");
         authors.setForeground(Color.white);
         authors.setBounds(20, 230, 360, 20);
         authors.setFont(font.deriveFont(15f));
