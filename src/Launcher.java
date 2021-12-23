@@ -28,7 +28,11 @@ public class Launcher implements ActionListener, Runnable {
     StartingGUI startingGUI;
     PlayerProfileGUI playerProfileGUI;
 
-    String API_key = "api_key=RGAPI-d236b7d0-56d0-4141-a7d4-cc27ffe6e62a";
+    String API_key = APIKey.getAPIKey();
+
+    //  API key hidden in another class for security reason.
+    //  Replace APIKey.getAPIKey() with "api_key=(your api key)" to test the application with your own key.
+
     Font font;
 
     public Launcher() {
