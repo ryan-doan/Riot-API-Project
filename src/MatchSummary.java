@@ -49,13 +49,7 @@ public class MatchSummary {
 
     //  Items
 
-    int slot1;
-    int slot2;
-    int slot3;
-    int slot4;
-    int slot5;
-    int slot6;
-    int trinkets;
+    int itemslots[] = new int[7];
 
     //  Ability order
 
@@ -67,7 +61,7 @@ public class MatchSummary {
     }
 
     public MatchSummary(MatchHistoryData mhd, Summoner summoner) throws Exception {
-        int playerIndex = findPlayer(summoner, mhd.getMetadata());
+        int playerIndex = dataOffset * findPlayer(summoner, mhd.getMetadata());
 
         boolean team = false;  //  True for red, false for blue.
 
@@ -75,21 +69,20 @@ public class MatchSummary {
             team = true;
         }
 
-        this.champion = mhd.getParticipants()[6 + nthPlayer(playerIndex)];
+        this.champion = mhd.getParticipants()[6 + playerIndex];
         this.team = team;
-        this.win = Boolean.parseBoolean(mhd.getParticipants()[134 + nthPlayer(playerIndex)]);
-        this.kills = Integer.parseInt(mhd.getParticipants()[38 + nthPlayer(playerIndex)]);
-        this.deaths = Integer.parseInt(mhd.getParticipants()[13 + nthPlayer(playerIndex)]);
-        this.assists = Integer.parseInt(mhd.getParticipants()[0 + nthPlayer(playerIndex)]);
-        this.gold = Integer.parseInt(mhd.getParticipants()[23 + nthPlayer(playerIndex)]);
-        this.cs =  Integer.parseInt(mhd.getParticipants()[118 + nthPlayer(playerIndex)]) +
-            Integer.parseInt(mhd.getParticipants()[47 + nthPlayer(playerIndex)]);
+        this.win = Boolean.parseBoolean(mhd.getParticipants()[134 + playerIndex]);
+        this.kills = Integer.parseInt(mhd.getParticipants()[38 + playerIndex]);
+        this.deaths = Integer.parseInt(mhd.getParticipants()[13 + playerIndex]);
+        this.assists = Integer.parseInt(mhd.getParticipants()[0 + playerIndex]);
+        this.gold = Integer.parseInt(mhd.getParticipants()[23 + playerIndex]);
+        this.cs =  Integer.parseInt(mhd.getParticipants()[118 + playerIndex]) +
+            Integer.parseInt(mhd.getParticipants()[47 + playerIndex]);
+        for (int i = 0; i < 7; i ++) {
+            itemslots[i] = Integer.parseInt(mhd.getParticipants()[29 + i + playerIndex]);
+        }
         this.runes = null;
     }
-
-    public static int nthPlayer(int nth) {
-        return (nth) * dataOffset;
-    }  //used to jump to the nth player in the participants array\
 
     public int findPlayer(Summoner summoner, String[] metadata) {
         for (int i = 0; i < 10; i++) {
@@ -103,7 +96,7 @@ public class MatchSummary {
     //  return 0 if not found (though this probably will never happen)
 
     public String toString() {
-        return String.format("%s, %b, %b, %d, %d, %d, %d, %d\n", this.champion, this.team, this.win, this.kills,
+        return String.format("%s, %b, %b, %d, %d, %d, %d, %d", this.champion, this.team, this.win, this.kills,
                 this.deaths, this.assists, this.cs, this.gold);
     }
 

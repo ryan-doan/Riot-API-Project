@@ -5,7 +5,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
-public class StartingGUI extends GUI {
+public class StartingGUI extends GUI implements Runnable {
     JFrame frame;
     JPanel panel;
     JLabel name;
@@ -14,6 +14,8 @@ public class StartingGUI extends GUI {
     JButton searchButton;
     Font font;
     Color lightBlue, lighterBlue, black, grey;
+
+    public void run() {}
 
     public StartingGUI() {
         try {
@@ -59,7 +61,7 @@ public class StartingGUI extends GUI {
         errorLabel.setFont(font.deriveFont(18f));
         panel.add(errorLabel);
 
-        authors = new JLabel("A program made by Ryan Doan");
+        authors = new JLabel();
         authors.setForeground(Color.white);
         authors.setBounds(20, 230, 360, 20);
         authors.setFont(font.deriveFont(15f));
