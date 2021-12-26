@@ -1,7 +1,7 @@
-import Views.MatchSummaryGUI;
-import Views.PlayerProfileGUI;
-import Views.StartingGUI;
+package Launcher;
 
+import Views.*;
+import Data.*;
 import javax.net.ssl.HttpsURLConnection;
 import javax.swing.*;
 import java.awt.*;
@@ -129,11 +129,7 @@ public class Launcher implements ActionListener, Runnable {
                         MatchSummary ms = new MatchSummary(mhd, player);
                         System.out.println(ms.toString());
                         MatchSummaryGUI msg = playerProfileGUI.matchList.get(i);
-                        msg.setKda(ms.kills, ms.deaths, ms.assists, ms.cs);
-                        msg.setChampion(ms.champion);
-                        for (int j = 0; j < 7; j++) {
-                            msg.setItemSlots(j, msg.setItemImage(ms.itemslots[j]));
-                        }
+                        msg.setData(ms);
                     }
 
                 } else {

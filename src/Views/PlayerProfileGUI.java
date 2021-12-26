@@ -5,6 +5,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import Data.MatchHistoryData;
 
 public class PlayerProfileGUI extends GUI implements Runnable {
     Font font;

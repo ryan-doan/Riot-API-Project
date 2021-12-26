@@ -1,6 +1,7 @@
 /*
  *  Store a player's stats from a match. Not to be confused with summoner, which stores basic account info
  */
+package Data;
 
 public class MatchSummary {
     //TODO since we can't access match history service right now, some variable types are speculative and might change
@@ -130,5 +131,9 @@ public class MatchSummary {
 
     public int getAssists() {
         return assists;
+    }
+
+    public int getItem(int index) {
+        return itemslots[index];
     }
 }

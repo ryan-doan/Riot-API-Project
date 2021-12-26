@@ -3,6 +3,8 @@ package Views;
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
+import Data.MatchHistoryData;
+import Data.MatchSummary;
 
 public class MatchSummaryGUI extends GUI implements Runnable {
     JPanel matchHistory;
@@ -27,6 +29,19 @@ public class MatchSummaryGUI extends GUI implements Runnable {
         matchHistory.add(kda);
         matchHistory.add(champion);
         matchHistory.add(championPic);
+    }
+
+    public void setData(MatchSummary ms) throws Exception {
+        if (ms.getWin()) {
+            matchHistory.setBackground(Color.CYAN);
+        } else {
+            matchHistory.setBackground(Color.red);
+        }
+        setChampion(ms.getChampion());
+        setKda(ms.getKills(), ms.getDeaths(), ms.getAssists(), ms.getCs());
+        for (int i = 0; i < 7; i++) {
+            setItemSlots(i,setItemImage(ms.getItem(i)));
+        }
     }
 
     public JTextArea getKda() {

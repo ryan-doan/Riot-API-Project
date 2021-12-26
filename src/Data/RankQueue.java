@@ -3,6 +3,7 @@
  *
  * Same as Summoner but for different queues, TFT not yet included
  */
+package Data;
 
 public class RankQueue {
     String queueType;

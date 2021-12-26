@@ -3,6 +3,7 @@
  *
  * For storing data while app is open, replacing txt files in the future
  */
+package Data;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
