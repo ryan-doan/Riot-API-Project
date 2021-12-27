@@ -124,9 +124,22 @@ public class Launcher implements ActionListener, Runnable {
                     String[] matchIDs = getMatchId(player.getPuuid(), 0, 5);
 
                     for (int i = 0; i < matchIDs.length; i++) {
-                        MatchHistoryData mhd = new MatchHistoryData(openConnection("https://americas.api.riotgames.com/lol/match/v5/" +
-                                "matches/" + matchIDs[i] + "?"));
-                        MatchSummary ms = new MatchSummary(mhd, player);
+                        MatchSummary ms = new MatchSummary();
+
+                        try {
+                            BufferedReader br = new BufferedReader(new FileReader(new File(
+                                    "C:\\Users\\Ryan\\IdeaProjects\\test\\src\\Cache\\" + matchIDs[i])));
+                            ms = new MatchSummary(br);
+                            System.out.println("Match is in cache. Fetching...");
+                            br.close();
+                        } catch (FileNotFoundException exception) {
+                            MatchHistoryData mhd = new MatchHistoryData(openConnection("https://americas.api." +
+                                    "riotgames.com/lol/match/v5/matches/" + matchIDs[i] + "?"));
+                            ms = new MatchSummary(mhd, player);
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                        }
+
                         System.out.println(ms.toString());
                         MatchSummaryGUI msg = playerProfileGUI.matchList.get(i);
                         msg.setData(ms);

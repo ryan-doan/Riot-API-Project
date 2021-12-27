@@ -3,6 +3,8 @@
  */
 package Data;
 
+import java.io.*;
+
 public class MatchSummary {
     //TODO since we can't access match history service right now, some variable types are speculative and might change
     // later on
@@ -11,6 +13,7 @@ public class MatchSummary {
 
     //  Basic stats
 
+    String matchID;
     String champion;
     String ban;
     boolean team; // True for red, false for blue.
@@ -56,12 +59,10 @@ public class MatchSummary {
 
     char[] abilityOrder = new char[18];
 
-    public MatchSummary(String champion, boolean team, boolean win, int kills, int deaths, int assists, int gold,
-                        int cs, Runes runes) {
-
-    }
+    public MatchSummary() { }
 
     public MatchSummary(MatchHistoryData mhd, Summoner summoner) throws Exception {
+        this.matchID = mhd.getMetadata()[1];
         int playerIndex = dataOffset * findPlayer(summoner, mhd.getMetadata());
 
         boolean team = false;  //  True for red, false for blue.
@@ -83,6 +84,23 @@ public class MatchSummary {
             itemslots[i] = Integer.parseInt(mhd.getParticipants()[29 + i + playerIndex]);
         }
         this.runes = null;
+
+        this.saveToCache();
+    }
+
+    public MatchSummary(BufferedReader br) throws Exception {
+        champion = br.readLine();
+        team = Boolean.parseBoolean(br.readLine());
+        win = Boolean.parseBoolean(br.readLine());
+        kills = Integer.parseInt(br.readLine());
+        deaths = Integer.parseInt(br.readLine());
+        assists = Integer.parseInt(br.readLine());
+        gold = Integer.parseInt(br.readLine());
+        cs = Integer.parseInt(br.readLine());
+        for (int i = 0; i < 7; i++) {
+            itemslots[i] = Integer.parseInt(br.readLine());
+        }
+        runes = null;
     }
 
     public int findPlayer(Summoner summoner, String[] metadata) {
@@ -99,6 +117,32 @@ public class MatchSummary {
     public String toString() {
         return String.format("%s, %b, %b, %d, %d, %d, %d, %d", this.champion, this.team, this.win, this.kills,
                 this.deaths, this.assists, this.cs, this.gold);
+    }
+
+    public void saveToCache() {
+        try {
+            File file = new File("C:\\Users\\Ryan\\IdeaProjects\\test\\src\\Cache\\"+ this.matchID);
+            PrintWriter pw = new PrintWriter(new FileWriter(file));
+
+            pw.println(this.champion);
+            pw.println(this.team);
+            pw.println(this.win);
+            pw.println(this.kills);
+            pw.println(this.deaths);
+            pw.println(this.assists);
+            pw.println(this.cs);
+            pw.println(this.gold);
+
+            for (int i = 0; i < 7; i++) {
+                pw.println(itemslots[i]);
+            }
+
+            pw.flush();
+
+            pw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public int getGold() {
