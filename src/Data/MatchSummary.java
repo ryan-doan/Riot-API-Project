@@ -77,9 +77,9 @@ public class MatchSummary {
         this.kills = Integer.parseInt(mhd.getParticipants()[38 + playerIndex]);
         this.deaths = Integer.parseInt(mhd.getParticipants()[13 + playerIndex]);
         this.assists = Integer.parseInt(mhd.getParticipants()[0 + playerIndex]);
-        this.gold = Integer.parseInt(mhd.getParticipants()[23 + playerIndex]);
         this.cs =  Integer.parseInt(mhd.getParticipants()[118 + playerIndex]) +
-            Integer.parseInt(mhd.getParticipants()[47 + playerIndex]);
+                Integer.parseInt(mhd.getParticipants()[47 + playerIndex]);
+        this.gold = Integer.parseInt(mhd.getParticipants()[23 + playerIndex]);
         for (int i = 0; i < 7; i ++) {
             itemslots[i] = Integer.parseInt(mhd.getParticipants()[29 + i + playerIndex]);
         }
@@ -95,8 +95,8 @@ public class MatchSummary {
         kills = Integer.parseInt(br.readLine());
         deaths = Integer.parseInt(br.readLine());
         assists = Integer.parseInt(br.readLine());
-        gold = Integer.parseInt(br.readLine());
         cs = Integer.parseInt(br.readLine());
+        gold = Integer.parseInt(br.readLine());
         for (int i = 0; i < 7; i++) {
             itemslots[i] = Integer.parseInt(br.readLine());
         }

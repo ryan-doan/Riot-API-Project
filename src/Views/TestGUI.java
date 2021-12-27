@@ -23,17 +23,17 @@ public class TestGUI {
                 }
                 stringBuilder.append(temp);
             }
+            System.out.println(panel.getSize().toString());
+            System.out.println(scroll.getSize().toString());
             text.setText(stringBuilder.toString());
             panel.add(text);
             panel.setBackground(Color.CYAN);
             scroll.setViewportView(panel);
             frame.add(scroll);
+            frame.setSize(800,400);
             frame.setVisible(true);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             reader.close();
-            while (true) {
-                System.out.println(panel.getBounds().getSize().toString() + "\n");
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }

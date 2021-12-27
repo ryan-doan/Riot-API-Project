@@ -19,9 +19,9 @@ public class MatchSummaryGUI extends GUI implements Runnable {
     public MatchSummaryGUI(int x, int y, int w, int h, Color color) {
         matchHistory = newJPanel(x, y, w, h, color);
 
-        kda = newJTextArea(100, 20,100,12,11, Color.white, Color.GRAY, "");
-        champion = newJTextArea(20, 20,50,12,11, Color.white, Color.GRAY, "");
-        championPic = newJLabel(20, 40, 50, 50);
+        kda = newJTextArea(100, 20,100,20,12, Color.black, color, "");
+        champion = newJTextArea(20, 20,50,20,12, Color.black, color, "");
+        championPic = newJLabel(20, 45, 50, 50);
         items = new JPanel();
         items.setLayout(new BoxLayout(items, BoxLayout.LINE_AXIS));
         items.setBounds(100, 55, 140, 20);
@@ -34,8 +34,12 @@ public class MatchSummaryGUI extends GUI implements Runnable {
     public void setData(MatchSummary ms) throws Exception {
         if (ms.getWin()) {
             matchHistory.setBackground(Color.CYAN);
+            kda.setBackground(Color.CYAN);
+            champion.setBackground(Color.CYAN);
         } else {
             matchHistory.setBackground(Color.red);
+            kda.setBackground(Color.red);
+            champion.setBackground(Color.red);
         }
         setChampion(ms.getChampion());
         setKda(ms.getKills(), ms.getDeaths(), ms.getAssists(), ms.getCs());

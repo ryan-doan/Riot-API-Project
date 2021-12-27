@@ -102,9 +102,9 @@ public class Launcher implements ActionListener, Runnable {
                     //display player's ranked data
 
                     Image soloQ = new ImageIcon(String.format("Emblem_%s.png",player.getSoloQ().getTier())).getImage()
-                            .getScaledInstance(75, 75, Image.SCALE_SMOOTH);
+                            .getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                     Image flexQ = new ImageIcon(String.format("Emblem_%s.png",player.getFlex().getTier())).getImage()
-                            .getScaledInstance(75, 75, Image.SCALE_SMOOTH);
+                            .getScaledInstance(50, 50, Image.SCALE_SMOOTH);
 
                     playerProfileGUI.getSoloQPic().setIcon(new ImageIcon(soloQ));
                     playerProfileGUI.getSoloQText().setText(String.format("%s %s\n%d LP", player.getSoloQ().getTier(),
