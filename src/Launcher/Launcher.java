@@ -1,25 +1,25 @@
-import Views.PlayerProfileGUI;
-import Views.StartingGUI;
+package Launcher;
 
+import Views.*;
+import Data.*;
 import javax.net.ssl.HttpsURLConnection;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
-import java.util.Arrays;
 
-public class Launcher implements ActionListener {
+import Key.APIKey;
+
+public class Launcher implements ActionListener, Runnable {
     // Initialize GUIs
 
     // DONE: Search player, display profile with level, both rank queues and LP
     // TODO: Win/loss
     //  Match history
     //  Champion mastery
-    //  Creating tournament (maybe)
     //  Using data to track other stats (warding, cs average, winrate, champion performance...)
 
     final Color victory = Color.cyan;
@@ -28,18 +28,14 @@ public class Launcher implements ActionListener {
     StartingGUI startingGUI;
     PlayerProfileGUI playerProfileGUI;
 
-    String API_key = "api_key=RGAPI-52cc184b-db40-495b-8c70-2d3d3f731f18";
+    String API_key = APIKey.getAPIKey();
+
+    //  API key hidden in another class for security reason.
+    //  Replace APIKey.getAPIKey() with "api_key=(your api key)" to test the application with your own key.
+
     Font font;
 
     public Launcher() {
-        init();
-    }
-
-    public static void main(String[] args) {
-        new Launcher();
-    }
-
-    public void init() {
         try {
             font = Font.createFont
                     (Font.TRUETYPE_FONT, new File("Christmas.ttf"));
@@ -54,6 +50,14 @@ public class Launcher implements ActionListener {
         startingGUI.getSearchButton().addActionListener(this);
     }
 
+    public static void main(String[] args) {
+        new Launcher();
+    }
+
+    public void run() {
+
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         // StartingPage
@@ -64,7 +68,7 @@ public class Launcher implements ActionListener {
             try {
 
                 Summoner player = new Summoner(openConnection("https://na1.api.riotgames.com/lol/summoner/v4/" +
-                        "summoners/by-name/" + startingGUI.getUsername().getText() + "?"));
+                        "summoners/by-name/" + startingGUI.getUsername().getText().replaceAll(" ", "") + "?"));
                 //Refer to the search method
 
                 if (player != null) {
@@ -98,9 +102,9 @@ public class Launcher implements ActionListener {
                     //display player's ranked data
 
                     Image soloQ = new ImageIcon(String.format("Emblem_%s.png",player.getSoloQ().getTier())).getImage()
-                            .getScaledInstance(75, 75, Image.SCALE_SMOOTH);
+                            .getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                     Image flexQ = new ImageIcon(String.format("Emblem_%s.png",player.getFlex().getTier())).getImage()
-                            .getScaledInstance(75, 75, Image.SCALE_SMOOTH);
+                            .getScaledInstance(50, 50, Image.SCALE_SMOOTH);
 
                     playerProfileGUI.getSoloQPic().setIcon(new ImageIcon(soloQ));
                     playerProfileGUI.getSoloQText().setText(String.format("%s %s\n%d LP", player.getSoloQ().getTier(),
@@ -117,16 +121,29 @@ public class Launcher implements ActionListener {
 
                     //get match history ids
 
-                    String[] matchIDs = getMatchId(player.getPuuid(), 0, 20);
+                    String[] matchIDs = getMatchId(player.getPuuid(), 0, 5);
 
                     for (int i = 0; i < matchIDs.length; i++) {
-                        MatchHistoryData mhd = new MatchHistoryData(openConnection("https://americas.api.riotgames.com/lol/match/v5/" +
-                                "matches/" + matchIDs[i] + "?"));
-                        MatchSummary ms = new MatchSummary(mhd, player);
+                        MatchSummary ms = new MatchSummary();
+
+                        try {
+                            BufferedReader br = new BufferedReader(new FileReader(new File(
+                                    "C:\\Users\\Ryan\\IdeaProjects\\test\\src\\Cache\\" + matchIDs[i])));
+                            ms = new MatchSummary(br);
+                            System.out.println("Match is in cache. Fetching...");
+                            br.close();
+                        } catch (FileNotFoundException exception) {
+                            MatchHistoryData mhd = new MatchHistoryData(openConnection("https://americas.api." +
+                                    "riotgames.com/lol/match/v5/matches/" + matchIDs[i] + "?"));
+                            ms = new MatchSummary(mhd, player);
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                        }
+
                         System.out.println(ms.toString());
+                        MatchSummaryGUI msg = playerProfileGUI.matchList.get(i);
+                        msg.setData(ms);
                     }
-
-
 
                 } else {
                     startingGUI.getErrorLabel().setText("An Error Occured.");

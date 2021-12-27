@@ -1,6 +1,7 @@
 /*
  * Stores data from a match
  */
+package Data;
 
 public class Match {
     //TODO since we can't access match history service right now, some variable types are speculative and might change
