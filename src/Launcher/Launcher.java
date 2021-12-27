@@ -8,10 +8,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
-import java.util.Arrays;
+
+import Key.APIKey;
 
 public class Launcher implements ActionListener, Runnable {
     // Initialize GUIs
